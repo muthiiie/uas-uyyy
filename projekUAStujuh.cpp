@@ -56,3 +56,42 @@ int bacaAngka(const string &tanya) {
         cout << "Input tidak valid, silahkan masukkan angka dari >= 0.\n";
     }
 }
+
+
+void garis() { cout << string(60, '-') << "\n"; }
+
+void header() {
+    garis();
+    cout << left << setw(5) << "No" << setw(10) << "Kode" << setw(25) << "Nama Barang" << setw(8) << "Stok" << "Harga\n";
+    garis();
+}
+
+void tampilkanBaris(int urutan, const Barang &brg) {
+    cout << left << setw(5) << urutan << setw(10) << brg.kode << setw(25) << brg.nama << setw(8) << brg.stok << "Rp" << brg.harga << "\n";
+}
+
+// FITUR
+void tambahBarang() {
+    Barang baru;
+    cout << "Kode Barang : ";
+    getline(cin, baru.kode);
+
+    for (int i = 0; i < jumlahData; i++)
+    {
+        if (hurufKecil(daftarBarang[i].kode) == hurufKecil(baru.kode))
+        {
+            cout << "Kode sudah dipakai!\n";
+            return;
+        }
+    }
+    cout << "Nama Barang : ";
+    getline(cin, baru.nama);
+    baru.stok  = bacaAngka("Stok        : ");
+    baru.harga = bacaAngka("Harga (Rp) : ");
+
+    if (jumlahData >= kapasitas)
+        PerbesarArray();
+
+    daftarBarang[jumlahData++] = baru;
+    cout << "Barang berhasil ditambahkan.\n";
+}
