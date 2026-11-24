@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <limits>
 using namespace std;
  
 const int kapasitasAwal = 5;
