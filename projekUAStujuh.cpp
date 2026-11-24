@@ -95,3 +95,14 @@ void tambahBarang() {
     daftarBarang[jumlahData++] = baru;
     cout << "Barang berhasil ditambahkan.\n";
 }
+
+void tampilSemua() {
+    if (jumlahData == 0) {
+        cout << "Belum ada data barang.\n";
+        return;
+    }
+    header();
+    for (int i = 0; i < jumlahData; i++)
+        tampilkanBaris(i + 1, daftarBarang[i]);
+    garis();
+}
