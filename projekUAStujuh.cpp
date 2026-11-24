@@ -15,7 +15,7 @@ struct Barang
     int harga;
 };
 
-Barang *daftarBarang + nullptr;
+Barang *daftarBarang = nullptr;
 int jumlahData = 0;
 int kapasitas = 0;
 long long totalPenjualan = 0;
@@ -32,4 +32,11 @@ void PerbesarArray(bool munculPesan = true) {
     kapasitas = kapasitasBaru;
     if (munculPesan)
         cout << "[Info!] Kapasitas Array diperbesar menjadi " << kapasitas << "\n";
+}
+
+// FUNGSI TAMBAHAN/BANTUAN
+string hurufKecil(string s) {
+    for (int i = 0; i < (int)s.length(); i++)
+        s[i] = tolower(s[i]);
+    return s;
 }
