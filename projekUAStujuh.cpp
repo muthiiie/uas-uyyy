@@ -40,3 +40,19 @@ string hurufKecil(string s) {
         s[i] = tolower(s[i]);
     return s;
 }
+
+int bacaAngka(const string &tanya) {
+    int x;
+    while (true)
+    {
+        cout << tanya;
+        if (cin >> x && x >= 0)
+        {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return x;
+        }
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Input tidak valid, silahkan masukkan angka dari >= 0.\n";
+    }
+}
