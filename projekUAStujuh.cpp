@@ -273,7 +273,7 @@ void ubahStok() {
     cout << "Stok diperbarui.\n";
 }
 
-oid hapusBarang() {
+void hapusBarang() {
     string input;
     cout << "Kode atau nama barang yang dihapus: ";
     getline(cin, input);
