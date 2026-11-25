@@ -272,4 +272,123 @@ void ubahStok() {
     daftarBarang[idx].stok = bacaAngka("Stok baru: ");
     cout << "Stok diperbarui.\n";
 }
-  
+
+oid hapusBarang() {
+    string input;
+    cout << "Kode atau nama barang yang dihapus: ";
+    getline(cin, input);
+    int idx = cariBarang(input);
+    if (idx == -1) {
+        cout << "Barang tidak ditemukan.\n";
+        return;
+    }
+    string namaTerhapus = daftarBarang[idx].nama;
+    for (int i = idx; i < jumlahData - 1; i++)
+        daftarBarang[i] = daftarBarang[i + 1];
+    jumlahData--;
+    cout << "Barang \"" << namaTerhapus << "\" dihapus.\n";
+}
+
+void jualBarang() {
+    string input;
+    cout << "Kode atau nama barang yang dijual: ";
+    getline(cin, input);
+    int idx = cariBarang(input);
+    if (idx == -1) {
+        cout << "Barang tidak ditemukan.\n";
+        return;
+    }
+
+    Barang *b = &daftarBarang[idx]; 
+    cout << "Barang : " << b->nama << " [" << b->kode << "]\n" << "Harga  : Rp" << b->harga << "\n" << "Stok   : " << b->stok << "\n";
+
+    if (b->stok == 0) {
+        cout << "Stok habis, tidak bisa dijual.\n";
+        return;
+    }
+
+    int qty = bacaAngka("Jumlah dijual: ");
+    if (qty <= 0) {
+        cout << "Jumlah harus lebih dari 0.\n";
+        return;
+    }
+    if (qty > b->stok) {
+        cout << "Stok tidak cukup! Stok tersedia hanya " << b->stok << ".\n";
+        return;
+    }
+
+    b->stok -= qty;
+    totalPenjualan += (long long)qty * b->harga;
+
+    garis();
+    cout << "NOTA PENJUALAN\n";
+    cout << b->nama << "  " << qty << " x Rp" << b->harga << " = Rp" << (long long)qty * b->harga << "\n";
+    garis();
+    cout << "Sisa stok " << b->nama << ": " << b->stok << "\n";
+    if (b->stok <= batasMenipis)
+        cout << "PERHATIAN: stok " << b->nama << " menipis, segera restok!\n";
+}
+
+void dataAwal() {
+    Barang contoh[] = {
+        {"B001", "Beras 5kg",      25, 68000},
+        {"B002", "Minyak Goreng",   6, 18000},
+        {"B003", "Gula Pasir",     12, 16000},
+        {"B004", "Mie Instan",      4,  3500},
+        {"B005", "Teh Celup",       9,  7000},
+        {"B006", "Sabun Mandi",    30,  4500},
+    };
+    int n = sizeof(contoh) / sizeof(contoh[0]);
+    for (int i = 0; i < n; i++)
+    {
+        if (jumlahData >= kapasitas)
+            PerbesarArray(false); 
+        daftarBarang[jumlahData++] = contoh[i];
+    }
+}
+
+int main() {
+    dataAwal();
+    int pilih;
+    do
+    {
+        cout << "\n===== MANAJEMEN STOK TOKO =====\n"
+             << "1. Tambah barang\n"
+             << "2. Tampilkan semua barang\n"
+             << "3. Cari barang (kode/nama)\n"
+             << "4. Urutkan stok (paling sedikit dulu)\n"
+             << "5. Laporan stok menipis\n"
+             << "6. Ubah stok barang\n"
+             << "7. Hapus barang\n"
+             << "8. Jual barang\n"
+             << "0. Keluar\n"
+             << "Pilih menu: ";
+        if (!(cin >> pilih)) {
+            cin.clear();
+            pilih = -1;
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "\n";
+
+        switch (pilih)
+        {
+            case 1: tambahBarang();   break;
+            case 2: tampilSemua();    break;
+            case 3: menuCari();       break;
+            case 4: tampilUrutStok(); break;
+            case 5: laporanMenipis(); break;
+            case 6: ubahStok();       break;
+            case 7: hapusBarang();    break;
+            case 8: jualBarang();     break;
+            case 0:
+                cout << "Total penjualan sesi ini: Rp" << totalPenjualan << "\n";
+                cout << "Terima kasih!\n";
+                break;
+            default: cout << "Menu tidak valid.\n";
+        }
+    } while (pilih != 0);
+
+    delete[] daftarBarang;
+    daftarBarang = nullptr;
+    return 0;
+}
