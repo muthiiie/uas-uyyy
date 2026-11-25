@@ -110,7 +110,7 @@ void tampilSemua() {
 // SEARCHING
 // cari berdasarkan kode (cocok persis), return indeks atau -1
 int carikode(const string &kodecari) {
-    string target = hurufkecil(kodecari);
+    string target = hurufKecil(kodecari);
 for (int i = 0; i < jumlahData; i++)
     {
         if (hurufKecil(daftarBarang[i].kode) == target)
@@ -124,7 +124,7 @@ int cariBarang(const string &kunci) {
     if (kunci.empty()) return -1;
 
     // cek cocok ga dengan kode barang
-    int idxKode = cariKode(kunci);
+    int idxKode = carikode(kunci);
     if (idxKode != -1) return idxKode;
 
     // cek dgn nama barang (persis atau sebagian)
@@ -161,7 +161,7 @@ int cariBarang(const string &kunci) {
         string kodePilih;
         cout << "Masukkan kode barang dari daftar di atas: ";
         getline(cin, kodePilih);
-        hasil = cariKode(kodePilih);
+        hasil = carikode(kodePilih);
     }
 
     delete[] indeksCocok;  
