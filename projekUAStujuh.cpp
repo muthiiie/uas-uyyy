@@ -329,26 +329,7 @@ void jualBarang() {
         cout << "PERHATIAN: stok " << b->nama << " menipis, segera restok!\n";
 }
 
-void dataAwal() {
-    Barang contoh[] = {
-        {"B001", "Beras 5kg",      25, 68000},
-        {"B002", "Minyak Goreng",   6, 18000},
-        {"B003", "Gula Pasir",     12, 16000},
-        {"B004", "Mie Instan",      4,  3500},
-        {"B005", "Teh Celup",       9,  7000},
-        {"B006", "Sabun Mandi",    30,  4500},
-    };
-    int n = sizeof(contoh) / sizeof(contoh[0]);
-    for (int i = 0; i < n; i++)
-    {
-        if (jumlahData >= kapasitas)
-            PerbesarArray(false); 
-        daftarBarang[jumlahData++] = contoh[i];
-    }
-}
-
 int main() {
-    dataAwal();
     int pilih;
     do
     {
