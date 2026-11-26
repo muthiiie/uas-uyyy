@@ -19,6 +19,7 @@ Barang *daftarBarang = nullptr;
 int jumlahData = 0;
 int kapasitas = 0;
 long long totalPenjualan = 0;
+int counterKode = 0;   // penghitung kode otomatis
 
 //aray dinamis
 void PerbesarArray(bool munculPesan = true) {
@@ -57,6 +58,14 @@ int bacaAngka(const string &tanya) {
     }
 }
 
+// buat kode otomatis: BRG001, BRG002, ...
+string buatKode() {
+    counterKode++;
+    string angka = to_string(counterKode);
+    while (angka.length() < 3) angka = "0" + angka;
+    return "BRG" + angka;
+}
+
 
 void garis() { cout << string(60, '-') << "\n"; }
 
@@ -73,17 +82,9 @@ void tampilkanBaris(int urutan, const Barang &brg) {
 // FITUR
 void tambahBarang() {
     Barang baru;
-    cout << "Kode Barang : ";
-    getline(cin, baru.kode);
+    baru.kode = buatKode();
+    cout << "Kode Barang : " << baru.kode << " (otomatis)\n";
 
-    for (int i = 0; i < jumlahData; i++)
-    {
-        if (hurufKecil(daftarBarang[i].kode) == hurufKecil(baru.kode))
-        {
-            cout << "Kode sudah dipakai!\n";
-            return;
-        }
-    }
     cout << "Nama Barang : ";
     getline(cin, baru.nama);
     baru.stok  = bacaAngka("Stok        : ");
@@ -93,7 +94,7 @@ void tambahBarang() {
         PerbesarArray();
 
     daftarBarang[jumlahData++] = baru;
-    cout << "Barang berhasil ditambahkan.\n";
+    cout << "Barang berhasil ditambahkan dengan kode " << baru.kode << ".\n";
 }
 
 void tampilSemua() {
@@ -282,11 +283,31 @@ void hapusBarang() {
         cout << "Barang tidak ditemukan.\n";
         return;
     }
+
     string namaTerhapus = daftarBarang[idx].nama;
+
+    if (!konfirmasi("Anda yakin ingin menghapus \"" + namaTerhapus + "\"?")) {
+        cout << "Penghapusan dibatalkan.\n";
+        return;
+    }
+
     for (int i = idx; i < jumlahData - 1; i++)
         daftarBarang[i] = daftarBarang[i + 1];
     jumlahData--;
     cout << "Barang \"" << namaTerhapus << "\" dihapus.\n";
+}
+
+// tanya konfirmasi y/n
+bool konfirmasi(const string &pertanyaan) {
+    string jawab;
+    while (true) {
+        cout << pertanyaan << " (y/n): ";
+        getline(cin, jawab);
+        jawab = hurufKecil(jawab);
+        if (jawab == "y" || jawab == "ya") return true;
+        if (jawab == "n" || jawab == "tidak") return false;
+        cout << "Jawab dengan y atau n.\n";
+    }
 }
 
 void jualBarang() {
