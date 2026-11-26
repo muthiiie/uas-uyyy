@@ -66,6 +66,18 @@ string buatKode() {
     return "BRG" + angka;
 }
 
+// tanya konfirmasi y/n
+bool konfirmasi(const string &pertanyaan) {
+    string jawab;
+    while (true) {
+        cout << pertanyaan << " (y/n): ";
+        getline(cin, jawab);
+        jawab = hurufKecil(jawab);
+        if (jawab == "y" || jawab == "ya") return true;
+        if (jawab == "n" || jawab == "tidak") return false;
+        cout << "Jawab dengan y atau n.\n";
+    }
+}
 
 void garis() { cout << string(60, '-') << "\n"; }
 
@@ -85,8 +97,14 @@ void tambahBarang() {
     baru.kode = buatKode();
     cout << "Kode Barang : " << baru.kode << " (otomatis)\n";
 
-    cout << "Nama Barang : ";
-    getline(cin, baru.nama);
+    // nama wajib diisi, ulangi sampai tidak kosong
+    do {
+        cout << "Nama Barang : ";
+        getline(cin, baru.nama);
+        if (baru.nama.empty())
+            cout << "Nama barang tidak boleh kosong!\n";
+    } while (baru.nama.empty());
+
     baru.stok  = bacaAngka("Stok        : ");
     baru.harga = bacaAngka("Harga (Rp) : ");
 
@@ -124,25 +142,30 @@ for (int i = 0; i < jumlahData; i++)
 int cariBarang(const string &kunci) {
     if (kunci.empty()) return -1;
 
-    // cek cocok ga dengan kode barang
+    // 1. kode cocok persis
     int idxKode = carikode(kunci);
     if (idxKode != -1) return idxKode;
 
-    // cek dgn nama barang (persis atau sebagian)
     string target = hurufKecil(kunci);
-    int *indeksCocok = new int[jumlahData > 0 ? jumlahData : 1];  
+    int *indeksCocok = new int[jumlahData > 0 ? jumlahData : 1];
     int hitung = 0;
     int hasil = -1;
 
     for (int i = 0; i < jumlahData; i++)
     {
         string namaKecil = hurufKecil(daftarBarang[i].nama);
-        if (namaKecil == target)  
+        string kodeKecil = hurufKecil(daftarBarang[i].kode);
+
+        // 2. nama cocok persis
+        if (namaKecil == target)
         {
             delete[] indeksCocok;
             return i;
         }
-        if (namaKecil.find(target) != string::npos)
+
+        // 3. kode ATAU nama cocok sebagian
+        if (kodeKecil.find(target) != string::npos ||
+            namaKecil.find(target) != string::npos)
             indeksCocok[hitung++] = i;
     }
 
@@ -152,7 +175,6 @@ int cariBarang(const string &kunci) {
     }
     else if (hitung > 1)
     {
-        // lebih dari 1 barang cocok
         cout << "Ditemukan beberapa barang yang mirip:\n";
         header();
         for (int i = 0; i < hitung; i++)
@@ -165,7 +187,7 @@ int cariBarang(const string &kunci) {
         hasil = carikode(kodePilih);
     }
 
-    delete[] indeksCocok;  
+    delete[] indeksCocok;
     return hasil;
 }
 
@@ -178,7 +200,7 @@ void menuCari() {
     bool ketemu = false;
     for (int i = 0; i < jumlahData; i++)
     {
-        bool cocokKode = (hurufKecil(daftarBarang[i].kode) == target);
+        bool cocokKode = (hurufKecil(daftarBarang[i].kode).find(target) != string::npos);
         bool cocokNama = (hurufKecil(daftarBarang[i].nama).find(target) != string::npos);
 
         if (cocokKode || cocokNama)
@@ -295,19 +317,6 @@ void hapusBarang() {
         daftarBarang[i] = daftarBarang[i + 1];
     jumlahData--;
     cout << "Barang \"" << namaTerhapus << "\" dihapus.\n";
-}
-
-// tanya konfirmasi y/n
-bool konfirmasi(const string &pertanyaan) {
-    string jawab;
-    while (true) {
-        cout << pertanyaan << " (y/n): ";
-        getline(cin, jawab);
-        jawab = hurufKecil(jawab);
-        if (jawab == "y" || jawab == "ya") return true;
-        if (jawab == "n" || jawab == "tidak") return false;
-        cout << "Jawab dengan y atau n.\n";
-    }
 }
 
 void jualBarang() {
